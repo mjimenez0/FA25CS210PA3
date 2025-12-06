@@ -122,7 +122,28 @@ bool dfs(int r, int c,
          vector<vector<bool>>& visited,
          vector<vector<int>>& parent_r,
          vector<vector<int>>& parent_c,
-         int exit_r, int exit_c); {
+         int exit_r, int exit_c) {
+
+// checks if out of bounds
+
+if (r < 0 || c < 0 || r >= N || c >= M){
+cout << "\nYou are out of bounds try again!";
+}
+
+// checks if bounds of maze walls
+
+if (maze [r][c] ==  1){
+return false;
+}
+
+// checks visted array
+
+vector<vector<bool>> visited(N, vector<bool>(M, false));
+
+
+
+
+
 
 }
 
@@ -163,17 +184,17 @@ int main() {
     // STUDENT WORK:
     // Call your DFS, track visited, and fill parent_r and parent_c
     // ------------------------------------------------------
-    // bool found = dfs(ent_r, ent_c, maze, visited, parent_r, parent_c, exit_r, exit_c);
+     bool found = dfs(ent_r, ent_c, maze, visited, parent_r, parent_c, exit_r, exit_c);
 
     // ------------------------------------------------------
     // STUDENT WORK:
     // If found, print the path
     // ------------------------------------------------------
-    // if (found) {
-    //     printPath(exitcell, parent_r, parent_c, ent_r, ent_c);
-    // } else {
-    //     cout << "\nNo path exists.\n";
-    // }
+     if (found) {
+         printPath(exitcell, parent_r, parent_c, ent_r, ent_c);
+     } else {
+         cout << "\nNo path exists.\n";
+     }
 
     return 0;
 }
