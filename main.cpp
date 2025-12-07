@@ -146,6 +146,13 @@ return true;
 }
 
 // exploring neighbors dr and dc
+for ( int i = 0; i < 4 ; i++){ // recurssion
+    int new_r = r + dr[i];
+    int new_c = c + dc[i]; // create new variables
+
+    parent_r[new_r][new_c] = r;
+    parent_c[new_r][new_c] = c; // create new maze bounds varaibles
+
 
 }
 
