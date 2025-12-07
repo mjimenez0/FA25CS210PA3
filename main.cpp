@@ -130,6 +130,8 @@ bool dfs(int r, int c,
     // N & M the bounds of the maze any number greater than them cannot happen
     // one of the 4 conditions must be met in order to be out of bounds
 
+    // fixed* need to add the maze.size and maze[0] to prevent the inputs to go out of bounds
+
     if (r < 0 || c < 0 || r >= maze.size() || c >= maze[0].size()) {
         return false;
     }
@@ -160,7 +162,7 @@ bool dfs(int r, int c,
         int new_r = r + dr[i]; // need to add the dr[i] doesnt work with just r alone, was just doing r alone
         int new_c = c + dc[i];
 
-        // similar to the one in int, this is the update path using the for loop, tried using the same one in the int
+        // similar to the one in main, this is the update path using the for loop, tried using the original one
         // but it made the code explode
         bool found = dfs(new_r, new_c, maze, visited, parent_r, parent_c, exit_r, exit_c);
         if (found) {
