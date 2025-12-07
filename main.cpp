@@ -124,28 +124,28 @@ bool dfs(int r, int c,
          vector<vector<int>>& parent_c,
          int exit_r, int exit_c) {
 
-// checks if out of bounds
+// 1. checks if out of bounds
 // colloms or rows cannot be less than 0
 // N & M the bounds of the maze any number number greater than them cannot happen
 // one of the 4 conditions must be met in order to be out of bounds
 
-if (r < 0 || c < 0 || r >= maze.size() || c >= maze[0].size){
-cout << "\nYou are out of bounds try again!";
+if (r < 0 || c < 0 || r >= maze.size() || c >= maze[0].size()){
+return false;
 }
 
-// checks if bounds of maze walls
+// 2. checks if bounds of maze walls
 if (maze [r][c] ==  1){
 return false;
 }
 
-// checks visted array
+// 3. & 4. checks visted array
 if (visited [r][c] == true){
-return false;
-} if ( r == exit_r && c == exit_c) { //
-return true;
+    return false;
+} if ( r == exit_r && c == exit_c) { // 5. exit check
+    return true;
 }
 
-// exploring neighbors dr and dc
+// 6. exploring neighbors dr and dc
 for ( int i = 0; i < 4 ; i++){ // recurssion
     int new_r = r + dr[i];
     int new_c = c + dc[i]; // create new variables
@@ -153,7 +153,12 @@ for ( int i = 0; i < 4 ; i++){ // recurssion
     parent_r[new_r][new_c] = r;
     parent_c[new_r][new_c] = c; // create new maze bounds varaibles
 
+    bool found = dfs(new_r, new_c, maze, visited, parent_r, parent_c, exit_r, exit_c);
+if (found){
+    return true;
+}
 
+return false;
 }
 
 // ----------------------------------------------------------
