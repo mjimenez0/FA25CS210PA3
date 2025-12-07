@@ -125,25 +125,27 @@ bool dfs(int r, int c,
          int exit_r, int exit_c) {
 
 // checks if out of bounds
+// colloms or rows cannot be less than 0
+// N & M the bounds of the maze any number number greater than them cannot happen
+// one of the 4 conditions must be met in order to be out of bounds
 
-if (r < 0 || c < 0 || r >= N || c >= M){
+if (r < 0 || c < 0 || r >= maze.size() || c >= maze[0].size){
 cout << "\nYou are out of bounds try again!";
 }
 
 // checks if bounds of maze walls
-
 if (maze [r][c] ==  1){
 return false;
 }
 
 // checks visted array
+if (visited [r][c] == true){
+return false;
+} if ( r == exit_r && c == exit_c) { //
+return true;
+}
 
-vector<vector<bool>> visited(N, vector<bool>(M, false));
-
-
-
-
-
+// exploring neighbors dr and dc
 
 }
 
