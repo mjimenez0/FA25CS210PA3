@@ -176,6 +176,10 @@ bool dfs(int r, int c,
     // fixed* the parent_r/c needs to be inside the if statement in order for it to work
     //* the bool found needs to have the new_r/c in it
 
+    /*  +dr[i], outside visited[r][c] , bool found = dfs (); i did get help with these three! with outside sources.
+     Videos and chat, recursion was only way the came to mind but there might have been an easier way.
+     */
+
 
     return false;
 }
