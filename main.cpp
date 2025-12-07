@@ -164,8 +164,8 @@ bool dfs(int r, int c,
         // but it made the code explode
         bool found = dfs(new_r, new_c, maze, visited, parent_r, parent_c, exit_r, exit_c);
         if (found) {
-            parent_r[new_r][new_c] = r;
-            parent_c[new_r][new_c] = c; // create maze new bounds
+            parent_r[new_r][new_c] = r; // fixed* needs to be = to both r and c
+            parent_c[new_r][new_c] = c; // create maze new bounds when the recursion.
             return true;
         }
     }
