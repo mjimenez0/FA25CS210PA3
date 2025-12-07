@@ -138,10 +138,16 @@ if (maze [r][c] ==  1){
 return false;
 }
 
-// 3. & 4. checks visted array
+// 3.  checks visted array
 if (visited [r][c] == true){
     return false;
-} if ( r == exit_r && c == exit_c) { // 5. exit check
+}
+
+// 4. check vist ? " watch videos on this"
+visited[r][c] = true;
+
+// 3. check the exist
+if ( r == exit_r && c == exit_c) { // 5. exit check
     return true;
 }
 
@@ -150,16 +156,16 @@ for ( int i = 0; i < 4 ; i++){ // recurssion
     int new_r = r + dr[i];
     int new_c = c + dc[i]; // create new variables
 
-    parent_r[new_r][new_c] = r;
-    parent_c[new_r][new_c] = c; // create new maze bounds varaibles
-
     bool found = dfs(new_r, new_c, maze, visited, parent_r, parent_c, exit_r, exit_c);
 if (found){
+    parent_r[new_r][new_c] = r;
+    parent_c[new_r][new_c] = c; // create new maze bounds varaibles
     return true;
+    }
+
 }
 
 return false;
-}
 
 // ----------------------------------------------------------
 // MAIN PROGRAM (students add DFS calls and logic)
