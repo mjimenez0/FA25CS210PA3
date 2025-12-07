@@ -16,13 +16,13 @@ int dc[4] = {0, 1, 0, -1};
 // ----------------------------------------------------------
 // DO NOT MODIFY: Maze generation
 // ----------------------------------------------------------
-void generateMaze(vector<vector<int>>& maze, int N, int M) {
+void generateMaze(vector<vector<int> > &maze, int N, int M) {
     srand(time(0));
 
     for (int r = 0; r < N; r++) {
         for (int c = 0; c < M; c++) {
             int roll = rand() % 100;
-            maze[r][c] = (roll < 70) ? 0 : 1;   // 0 = open, 1 = wall
+            maze[r][c] = (roll < 70) ? 0 : 1; // 0 = open, 1 = wall
         }
     }
 }
@@ -30,7 +30,7 @@ void generateMaze(vector<vector<int>>& maze, int N, int M) {
 // ----------------------------------------------------------
 // DO NOT MODIFY: Choose a random boundary cell that is open
 // ----------------------------------------------------------
-pair<int,int> chooseBoundaryCell(const vector<vector<int>>& maze) {
+pair<int, int> chooseBoundaryCell(const vector<vector<int> > &maze) {
     int N = maze.size();
     int M = maze[0].size();
 
@@ -38,16 +38,20 @@ pair<int,int> chooseBoundaryCell(const vector<vector<int>>& maze) {
         int side = rand() % 4;
         int r, c;
 
-        if (side == 0) {          // top row
+        if (side == 0) {
+            // top row
             r = 0;
             c = rand() % M;
-        } else if (side == 1) {   // bottom row
+        } else if (side == 1) {
+            // bottom row
             r = N - 1;
             c = rand() % M;
-        } else if (side == 2) {   // left column
+        } else if (side == 2) {
+            // left column
             r = rand() % N;
             c = 0;
-        } else {                  // right column
+        } else {
+            // right column
             r = rand() % N;
             c = M - 1;
         }
@@ -61,10 +65,9 @@ pair<int,int> chooseBoundaryCell(const vector<vector<int>>& maze) {
 // ----------------------------------------------------------
 // DO NOT MODIFY: Print the maze with S and E markers
 // ----------------------------------------------------------
-void printMaze(const vector<vector<int>>& maze,
+void printMaze(const vector<vector<int> > &maze,
                int ent_r, int ent_c,
-               int exit_r, int exit_c)
-{
+               int exit_r, int exit_c) {
     int N = maze.size();
     int M = maze[0].size();
 
@@ -87,15 +90,14 @@ void printMaze(const vector<vector<int>>& maze,
 // DO NOT MODIFY: Print the reconstructed path
 // Students must fill parent[][] correctly during DFS
 // ----------------------------------------------------------
-void printPath(pair<int,int> exitcell,
-               const vector<vector<int>>& parent_r,
-               const vector<vector<int>>& parent_c,
-               int ent_r, int ent_c)
-{
+void printPath(pair<int, int> exitcell,
+               const vector<vector<int> > &parent_r,
+               const vector<vector<int> > &parent_c,
+               int ent_r, int ent_c) {
     int r = exitcell.first;
     int c = exitcell.second;
 
-    vector<pair<int,int>> path;
+    vector<pair<int, int> > path;
 
     // Walk backward from exit to entrance
     while (!(r == ent_r && c == ent_c)) {
@@ -118,103 +120,113 @@ void printPath(pair<int,int> exitcell,
 // Add arguments, return type, and logic
 // ----------------------------------------------------------
 bool dfs(int r, int c,
-         const vector<vector<int>>& maze,
-         vector<vector<bool>>& visited,
-         vector<vector<int>>& parent_r,
-         vector<vector<int>>& parent_c,
+         const vector<vector<int> > &maze,
+         vector<vector<bool> > &visited,
+         vector<vector<int> > &parent_r,
+         vector<vector<int> > &parent_c,
          int exit_r, int exit_c) {
+    // 1. checks if out of bounds
+    // colloms or rows cannot be less than 0
+    // N & M the bounds of the maze any number greater than them cannot happen
+    // one of the 4 conditions must be met in order to be out of bounds
 
-// 1. checks if out of bounds
-// colloms or rows cannot be less than 0
-// N & M the bounds of the maze any number number greater than them cannot happen
-// one of the 4 conditions must be met in order to be out of bounds
+    if (r < 0 || c < 0 || r >= maze.size() || c >= maze[0].size()) {
+        return false;
+    }
 
-if (r < 0 || c < 0 || r >= maze.size() || c >= maze[0].size()){
-return false;
-}
+    // 2. checks if bounds of maze walls , just like the prompt
+    if (maze[r][c] == 1) {
+        return false;
+    }
 
-// 2. checks if bounds of maze walls
-if (maze [r][c] ==  1){
-return false;
-}
+    // 3.  checks visted array , that way i can visit the same one twice cuasing an infinite loop
+    if (visited[r][c] == true) {
+        return false;
+    }
 
-// 3.  checks visted array
-if (visited [r][c] == true){
+    // 4. check vist ?  after looking into it, it  cant be in the if statement as it would make it reduntent
+    // did watch a youtube vid and had chat explain it to my on way this is needed outside
+    visited[r][c] = true;
+
+    // 3. check exist , so it stops once reached
+    if (r == exit_r && c == exit_c) {
+        return true;
+    }
+
+
+    // 6. exploring neighbors dr and dc
+    for (int i = 0; i < 4; i++) {
+        // recurssion
+        int new_r = r + dr[i]; // need to add the dr[i] doesnt work with just r alone, was just doing r alone
+        int new_c = c + dc[i];
+
+        // similar to the one in int, this is the update path using the for loop, tried using the same one in the int
+        // but it made the code explode
+        bool found = dfs(new_r, new_c, maze, visited, parent_r, parent_c, exit_r, exit_c);
+        if (found) {
+            parent_r[new_r][new_c] = r;
+            parent_c[new_r][new_c] = c; // create maze new bounds
+            return true;
+        }
+    }
+
+    // recurrsion isnt working ?
+    // fixed* the parent_r/c needs to be inside the if statement in order for it to work
+    //* the bool found needs to have the new_r/c in it
+
+
     return false;
 }
 
-// 4. check vist ? " watch videos on this"
-visited[r][c] = true;
+    // ----------------------------------------------------------
+    // MAIN PROGRAM (students add DFS calls and logic)
+    // ----------------------------------------------------------
+    int main(){
 
-// 3. check the exist
-if ( r == exit_r && c == exit_c) { // 5. exit check
-    return true;
-}
+        int N, M;
 
-// 6. exploring neighbors dr and dc
-for ( int i = 0; i < 4 ; i++){ // recurssion
-    int new_r = r + dr[i];
-    int new_c = c + dc[i]; // create new variables
+        cout << "Enter maze dimensions N M: ";
+        cin >> N >> M;
 
-    bool found = dfs(new_r, new_c, maze, visited, parent_r, parent_c, exit_r, exit_c);
-if (found){
-    parent_r[new_r][new_c] = r;
-    parent_c[new_r][new_c] = c; // create new maze bounds varaibles
-    return true;
+        vector<vector<int> > maze(N, vector<int>(M));
+        generateMaze(maze, N, M);
+
+        // Pick entrance and exit
+        pair<int, int> entrance = chooseBoundaryCell(maze);
+        pair<int, int> exitcell = chooseBoundaryCell(maze);
+
+        while (exitcell == entrance) {
+            exitcell = chooseBoundaryCell(maze);
+        }
+
+        int ent_r = entrance.first;
+        int ent_c = entrance.second;
+        int exit_r = exitcell.first;
+        int exit_c = exitcell.second;
+
+        // Display the maze
+        printMaze(maze, ent_r, ent_c, exit_r, exit_c);
+
+        // Students must use these
+        vector<vector<bool> > visited(N, vector<bool>(M, false));
+        vector<vector<int> > parent_r(N, vector<int>(M, -1));
+        vector<vector<int> > parent_c(N, vector<int>(M, -1));
+
+        // ------------------------------------------------------
+        // STUDENT WORK:
+        // Call your DFS, track visited, and fill parent_r and parent_c
+        // ------------------------------------------------------
+        bool found = dfs(ent_r, ent_c, maze, visited, parent_r, parent_c, exit_r, exit_c);
+
+        // ------------------------------------------------------
+        // STUDENT WORK:
+        // If found, print the path
+        // ------------------------------------------------------
+        if (found) {
+            printPath(exitcell, parent_r, parent_c, ent_r, ent_c);
+        } else {
+            cout << "\nNo path exists.\n";
+        }
+
+        return 0;
     }
-
-}
-
-return false;
-
-// ----------------------------------------------------------
-// MAIN PROGRAM (students add DFS calls and logic)
-// ----------------------------------------------------------
-int main() {
-    int N, M;
-
-    cout << "Enter maze dimensions N M: ";
-    cin >> N >> M;
-
-    vector<vector<int>> maze(N, vector<int>(M));
-    generateMaze(maze, N, M);
-
-    // Pick entrance and exit
-    pair<int,int> entrance = chooseBoundaryCell(maze);
-    pair<int,int> exitcell = chooseBoundaryCell(maze);
-
-    while (exitcell == entrance) {
-        exitcell = chooseBoundaryCell(maze);
-    }
-
-    int ent_r = entrance.first;
-    int ent_c = entrance.second;
-    int exit_r = exitcell.first;
-    int exit_c = exitcell.second;
-
-    // Display the maze
-    printMaze(maze, ent_r, ent_c, exit_r, exit_c);
-
-    // Students must use these
-    vector<vector<bool>> visited(N, vector<bool>(M, false));
-    vector<vector<int>> parent_r(N, vector<int>(M, -1));
-    vector<vector<int>> parent_c(N, vector<int>(M, -1));
-
-    // ------------------------------------------------------
-    // STUDENT WORK:
-    // Call your DFS, track visited, and fill parent_r and parent_c
-    // ------------------------------------------------------
-     bool found = dfs(ent_r, ent_c, maze, visited, parent_r, parent_c, exit_r, exit_c);
-
-    // ------------------------------------------------------
-    // STUDENT WORK:
-    // If found, print the path
-    // ------------------------------------------------------
-     if (found) {
-         printPath(exitcell, parent_r, parent_c, ent_r, ent_c);
-     } else {
-         cout << "\nNo path exists.\n";
-     }
-
-    return 0;
-}
